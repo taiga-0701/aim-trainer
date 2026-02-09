@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 let cx = canvas.width / 2;
 let cy = canvas.height / 2;
 
-let sensitivity = 0.5;
+let sensitivity = 0.25;
 let score = 0;
 
 const target = {
