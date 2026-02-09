@@ -1,44 +1,19 @@
-* {
-  box-sizing: border-box;
-  font-family: system-ui, sans-serif;
-}
-
 body {
   margin: 0;
-  background: #0e0f14;
-  color: #e6e7eb;
-  overflow: hidden;
+  background: #0e0e0e;
+  color: #fff;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #ui {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  background: rgba(20, 22, 30, 0.9);
-  padding: 14px;
-  border-radius: 12px;
-  width: 260px;
+  margin: 10px;
 }
 
-.controls {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 6px;
-  font-size: 12px;
+canvas {
+  border: 1px solid #444;
+  cursor: crosshair;
 }
 
-#stats {
-  font-size: 12px;
-  margin-bottom: 6px;
-}
-
-h2 {
-  font-size: 14px;
-  margin: 8px 0 4px;
-}
-
-ol {
-  padding-left: 18px;
-  font-size: 12px;
-}
