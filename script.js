@@ -4,25 +4,24 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// ===== 視点（角度）=====
+// ===== 視点角度 =====
 let yaw = 0;
 let pitch = 0;
 
-// ===== VAL感度設定 =====
-const DPI = 800;
-const VAL_SENS = 0.25;
-const VAL_YAW = 0.07; // VAL固定値
+// ===== VAL設定 =====
+const VAL_SENS = 0.25; // 800dpi想定
+const VAL_YAW = 0.07;
 
 // ===== スコア =====
 let score = 0;
 
-// ===== 的（3D空間）=====
+// ===== 的（ワールド座標）=====
 const target = {
-  x: (Math.random() - 0.5) * 6,
-  y: (Math.random() - 0.5) * 4,
+  x: 0,
+  y: 0,
   z: 6,
   r: 0.4,
-  vx: 0.03 // ストレイフ速度（VAL歩き寄り）
+  vx: 0.03
 };
 
 // ===== ポインターロック =====
@@ -30,14 +29,14 @@ canvas.addEventListener("mousedown", () => {
   canvas.requestPointerLock();
 });
 
-// ===== 視点操作（VAL式）=====
+// ===== マウス = 視点回転 =====
 document.addEventListener("mousemove", e => {
   if (document.pointerLockElement !== canvas) return;
 
-  const scale = VAL_SENS * VAL_YAW * (DPI / 800);
+  const rot = VAL_SENS * VAL_YAW;
 
-  yaw   += e.movementX * scale;
-  pitch -= e.movementY * scale;
+  yaw   += e.movementX * rot;
+  pitch -= e.movementY * rot;
 
   pitch = Math.max(-1.3, Math.min(1.3, pitch));
 });
@@ -46,29 +45,29 @@ document.addEventListener("mousemove", e => {
 function loop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // --- 的ストレイフ ---
+  // --- 的ストレイフ（世界内で移動） ---
   target.x += target.vx;
   if (Math.abs(target.x) > 3) target.vx *= -1;
 
-  // --- 視点変換 ---
-  const dx = target.x - yaw;
-  const dy = target.y - pitch;
-  const dz = target.z;
+  // --- カメラ座標変換 ---
+  const rx = target.x - yaw;
+  const ry = target.y - pitch;
+  const rz = target.z;
 
-  if (dz > 0) {
-    const scale = 600 / dz;
+  if (rz > 0) {
+    const scale = 600 / rz;
 
-    const sx = canvas.width / 2 + dx * scale;
-    const sy = canvas.height / 2 + dy * scale;
+    const sx = canvas.width / 2 + rx * scale;
+    const sy = canvas.height / 2 + ry * scale;
     const sr = target.r * scale;
 
-    // --- 的描画 ---
+    // 的描画
     ctx.beginPath();
     ctx.arc(sx, sy, sr, 0, Math.PI * 2);
     ctx.fillStyle = "red";
     ctx.fill();
 
-    // --- ヒット判定（中央固定） ---
+    // ヒット判定（中央固定）
     if (Math.hypot(sx - canvas.width / 2, sy - canvas.height / 2) < sr) {
       score++;
       target.x = (Math.random() - 0.5) * 6;
@@ -77,7 +76,7 @@ function loop() {
     }
   }
 
-  // --- クロスヘア（固定） ---
+  // --- クロスヘア（完全固定） ---
   ctx.strokeStyle = "white";
   ctx.beginPath();
   ctx.moveTo(canvas.width / 2 - 8, canvas.height / 2);
@@ -86,7 +85,7 @@ function loop() {
   ctx.lineTo(canvas.width / 2, canvas.height / 2 + 8);
   ctx.stroke();
 
-  // --- スコア ---
+  // スコア
   ctx.fillStyle = "white";
   ctx.font = "20px sans-serif";
   ctx.fillText(`Score: ${score}`, 20, 30);
