@@ -8,7 +8,9 @@ canvas.height = window.innerHeight;
 let cx = canvas.width / 2;
 let cy = canvas.height / 2;
 
-let sensitivity = 0.25;
+let sensitivity = 0.5;
+const VAL_YAW = 1;
+
 
 // ===== スコア =====
 let score = 0;
