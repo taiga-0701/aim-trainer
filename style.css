@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #0e0f14;
+  color: #e6e7eb;
+  overflow: hidden;
+}
+
+#ui {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  background: rgba(20, 22, 30, 0.9);
+  padding: 14px;
+  border-radius: 12px;
+  width: 260px;
+}
+
+.controls {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+#stats {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+h2 {
+  font-size: 14px;
+  margin: 8px 0 4px;
+}
+
+ol {
+  padding-left: 18px;
+  font-size: 12px;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VAL Aim Trainer (Quick Rank)</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="ui">
+    <h1>VAL Aim Trainer</h1>
+
+    <div class="controls">
+      <label>Name <input type="text" id="playerName" placeholder="your name"></label>
+      <button id="saveName">Save</button>
+    </div>
+
+    <div class="controls">
+      <label>Mode:
+        <select id="mode">
+          <option value="flick">Flick</option>
+          <option value="flickMove">Flick (Move)</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="controls">
+      <button id="start">Start</button>
+      <button id="stop">Stop</button>
+    </div>
+
+    <div id="stats">
+      <span id="score">Score: 0</span>
+      <span id="time">Time: 0.0s</span>
+    </div>
+
+    <h2>Local Ranking</h2>
+    <ol id="ranking"></ol>
+  </div>
+
+  <canvas id="game"></canvas>
+  <script src="script.js"></script>
+</body>
+</html>
