@@ -9,7 +9,7 @@ let cx = canvas.width / 2;
 let cy = canvas.height / 2;
 
 let sensitivity = 0.25;
-const VAL_YAW = 0.025;
+const VAL_YAW = 0.075;
 
 
 // ===== スコア =====
