@@ -1,62 +1,90 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-let aimX = canvas.width / 2;
-let aimY = canvas.height / 2;
-let sensitivity = 0.5;
+let cx = canvas.width / 2;
+let cy = canvas.height / 2;
 
-let target = {
-  x: Math.random() * canvas.width,
-  y: Math.random() * canvas.height,
-  r: 15
+let sensitivity = 0.5;
+let score = 0;
+
+const target = {
+  x: rand(50, canvas.width - 50),
+  y: rand(50, canvas.height - 50),
+  r: 18
 };
 
+// ===== FPS Pointer Lock =====
 canvas.addEventListener("click", () => {
   canvas.requestPointerLock();
 });
 
 document.addEventListener("mousemove", e => {
-  if (document.pointerLockElement === canvas) {
-    aimX += e.movementX * sensitivity;
-    aimY += e.movementY * sensitivity;
-    aimX = Math.max(0, Math.min(canvas.width, aimX));
-    aimY = Math.max(0, Math.min(canvas.height, aimY));
-  }
+  if (document.pointerLockElement !== canvas) return;
+
+  cx += e.movementX * sensitivity;
+  cy += e.movementY * sensitivity;
+
+  cx = clamp(cx, 0, canvas.width);
+  cy = clamp(cy, 0, canvas.height);
 });
 
+// ===== Shooting =====
 canvas.addEventListener("mousedown", () => {
-  const dx = aimX - target.x;
-  const dy = aimY - target.y;
-  if (Math.hypot(dx, dy) < target.r) {
-    target.x = Math.random() * canvas.width;
-    target.y = Math.random() * canvas.height;
+  const dx = cx - target.x;
+  const dy = cy - target.y;
+  if (Math.hypot(dx, dy) <= target.r) {
+    score++;
+    document.getElementById("score").textContent = `Score: ${score}`;
+    respawn();
   }
 });
 
-const sens = document.getElementById("sens");
+// ===== Sens UI =====
+const sensInput = document.getElementById("sens");
 const sensVal = document.getElementById("sensVal");
-sens.addEventListener("input", () => {
-  sensitivity = parseFloat(sens.value);
-  sensVal.textContent = sensitivity;
+
+sensInput.addEventListener("input", () => {
+  sensitivity = parseFloat(sensInput.value);
+  sensVal.textContent = sensitivity.toFixed(2);
 });
 
+// ===== Draw Loop =====
 function loop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // target
   ctx.beginPath();
   ctx.arc(target.x, target.y, target.r, 0, Math.PI * 2);
-  ctx.fillStyle = "red";
+  ctx.fillStyle = "#e53935";
   ctx.fill();
 
-  ctx.strokeStyle = "white";
+  // crosshair
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(aimX - 10, aimY);
-  ctx.lineTo(aimX + 10, aimY);
-  ctx.moveTo(aimX, aimY - 10);
-  ctx.lineTo(aimX, aimY + 10);
+  ctx.moveTo(cx - 8, cy);
+  ctx.lineTo(cx + 8, cy);
+  ctx.moveTo(cx, cy - 8);
+  ctx.lineTo(cx, cy + 8);
   ctx.stroke();
 
   requestAnimationFrame(loop);
 }
+
 loop();
+
+// ===== Utils =====
+function respawn() {
+  target.x = rand(50, canvas.width - 50);
+  target.y = rand(50, canvas.height - 50);
+}
+
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
+}
+
 
