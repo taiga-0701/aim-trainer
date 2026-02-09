@@ -1,8 +1,8 @@
 body {
   margin: 0;
-  background: #0e0e0e;
+  background: #0b0b0b;
   color: #fff;
-  font-family: sans-serif;
+  font-family: system-ui, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,10 +10,13 @@ body {
 
 #ui {
   margin: 10px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 14px;
 }
 
 canvas {
-  border: 1px solid #444;
-  cursor: crosshair;
+  border: 1px solid #333;
+  cursor: none; /* ← マウス消す */
 }
-
