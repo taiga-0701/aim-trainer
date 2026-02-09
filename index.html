@@ -1,44 +1,19 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VAL Aim Trainer (Quick Rank)</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <title>FPS Aim Trainer</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="ui">
-    <h1>VAL Aim Trainer</h1>
-
-    <div class="controls">
-      <label>Name <input type="text" id="playerName" placeholder="your name"></label>
-      <button id="saveName">Save</button>
-    </div>
-
-    <div class="controls">
-      <label>Mode:
-        <select id="mode">
-          <option value="flick">Flick</option>
-          <option value="flickMove">Flick (Move)</option>
-        </select>
-      </label>
-    </div>
-
-    <div class="controls">
-      <button id="start">Start</button>
-      <button id="stop">Stop</button>
-    </div>
-
-    <div id="stats">
-      <span id="score">Score: 0</span>
-      <span id="time">Time: 0.0s</span>
-    </div>
-
-    <h2>Local Ranking</h2>
-    <ol id="ranking"></ol>
+    <div>Click canvas to enter FPS mouse mode</div>
+    <label>Sensitivity:
+      <input type="range" id="sens" min="0.1" max="2" step="0.01" value="0.5">
+      <span id="sensVal">0.5</span>
+    </label>
   </div>
-
-  <canvas id="game"></canvas>
+  <canvas id="game" width="800" height="600"></canvas>
   <script src="script.js"></script>
 </body>
 </html>
