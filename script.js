@@ -4,24 +4,21 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// ===== 視点角度 =====
-let yaw = 0;
-let pitch = 0;
+// ===== クロスヘア位置 =====
+let cx = canvas.width / 2;
+let cy = canvas.height / 2;
 
-// ===== VAL設定 =====
-const VAL_SENS = 0.25; // 800dpi想定
-const VAL_YAW = 0.07;
+// ===== 感度（VAL 800dpi / 0.25 体感寄せ）=====
+let sensitivity = 0.18;
 
 // ===== スコア =====
 let score = 0;
 
-// ===== 的（ワールド座標）=====
+// ===== 的（固定）=====
 const target = {
-  x: 0,
-  y: 0,
-  z: 6,
-  r: 0.4,
-  vx: 0.03
+  x: canvas.width / 2,
+  y: canvas.height / 2,
+  r: 28
 };
 
 // ===== ポインターロック =====
@@ -29,61 +26,49 @@ canvas.addEventListener("mousedown", () => {
   canvas.requestPointerLock();
 });
 
-// ===== マウス = 視点回転 =====
+// ===== マウスでクロスヘア移動 =====
 document.addEventListener("mousemove", e => {
   if (document.pointerLockElement !== canvas) return;
 
-  const rot = VAL_SENS * VAL_YAW;
+  cx += e.movementX * sensitivity;
+  cy += e.movementY * sensitivity;
 
-  yaw   += e.movementX * rot;
-  pitch -= e.movementY * rot;
-
-  pitch = Math.max(-1.3, Math.min(1.3, pitch));
+  cx = Math.max(0, Math.min(canvas.width, cx));
+  cy = Math.max(0, Math.min(canvas.height, cy));
 });
 
 // ===== メインループ =====
 function loop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#111";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // --- 的ストレイフ（世界内で移動） ---
-  target.x += target.vx;
-  if (Math.abs(target.x) > 3) target.vx *= -1;
-
-  // --- カメラ座標変換 ---
-  const rx = target.x - yaw;
-  const ry = target.y - pitch;
-  const rz = target.z;
-
-  if (rz > 0) {
-    const scale = 600 / rz;
-
-    const sx = canvas.width / 2 + rx * scale;
-    const sy = canvas.height / 2 + ry * scale;
-    const sr = target.r * scale;
-
-    // 的描画
-    ctx.beginPath();
-    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
-    ctx.fillStyle = "red";
-    ctx.fill();
-
-    // ヒット判定（中央固定）
-    if (Math.hypot(sx - canvas.width / 2, sy - canvas.height / 2) < sr) {
-      score++;
-      target.x = (Math.random() - 0.5) * 6;
-      target.y = (Math.random() - 0.5) * 4;
-      target.z = Math.random() * 3 + 4;
-    }
-  }
-
-  // --- クロスヘア（完全固定） ---
-  ctx.strokeStyle = "white";
+  // 的
   ctx.beginPath();
-  ctx.moveTo(canvas.width / 2 - 8, canvas.height / 2);
-  ctx.lineTo(canvas.width / 2 + 8, canvas.height / 2);
-  ctx.moveTo(canvas.width / 2, canvas.height / 2 - 8);
-  ctx.lineTo(canvas.width / 2, canvas.height / 2 + 8);
+  ctx.arc(target.x, target.y, target.r, 0, Math.PI * 2);
+  ctx.fillStyle = "#ff4655";
+  ctx.fill();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = "black";
   ctx.stroke();
+
+  // クロスヘア
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx - 12, cy);
+  ctx.lineTo(cx + 12, cy);
+  ctx.moveTo(cx, cy - 12);
+  ctx.lineTo(cx, cy + 12);
+  ctx.stroke();
+
+  // ヒット判定（重なったら即）
+  const dx = cx - target.x;
+  const dy = cy - target.y;
+  if (Math.hypot(dx, dy) < target.r) {
+    score++;
+    target.x = Math.random() * (canvas.width - 200) + 100;
+    target.y = Math.random() * (canvas.height - 200) + 100;
+  }
 
   // スコア
   ctx.fillStyle = "white";
